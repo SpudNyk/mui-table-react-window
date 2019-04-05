@@ -3,9 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
+    "classnames": "^2.2.6",
+    "faker": "^4.1.0",
+    "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "react-virtualized-auto-sizer": "^1.0.2",
+    "react-window": "^1.7.1",
+    "typeface-roboto": "^0.0.54"
   },
   "scripts": {
     "start": "react-scripts start",
