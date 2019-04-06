@@ -3,7 +3,7 @@ import faker from 'faker/locale/en';
 const generateData = count => {
     const items = [];
     for (let i = 0; i < count; i++) {
-        const firstName = faker.name.firstName(1);
+        const firstName = faker.name.firstName();
         const lastName = faker.name.lastName();
         const modified = faker.date.past(1);
         const created = faker.date.past(3, modified);
