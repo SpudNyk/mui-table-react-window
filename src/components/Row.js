@@ -4,10 +4,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { areEqual } from 'react-window';
 
-const styles = {
-    
-}
-
 const Row = React.memo(({ index, style, data }) => {
     const {
         columns,
