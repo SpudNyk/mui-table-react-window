@@ -1,16 +1,22 @@
-import React, { useMemo, useState, useRef, useLayoutEffect } from 'react';
-import classnames from 'classnames';
+import React, {
+    useMemo,
+    useState,
+    useRef,
+    useLayoutEffect,
+    useCallback
+} from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
 
-import { VariableSizeList as List, areEqual } from 'react-window';
+import { VariableSizeList as List } from 'react-window';
 
 import { withStyles } from '@material-ui/core/styles';
+import Row from './Row';
+import Header from './Header';
+import Footer from './Footer';
 
 const SmallCheckbox = withStyles({
     root: {
@@ -28,54 +34,6 @@ const SmallCheckbox = withStyles({
 const Content = ({ value }) => {
     return String(value);
 };
-
-const Row = React.memo(({ index, style, data }) => {
-    const {
-        columns,
-        items,
-        classes,
-        selectable,
-        selectAll,
-        selection,
-        onSelect
-    } = data;
-    const item = items[index];
-    const selected =
-        selectable && (selectAll || selection.indexOf(item) !== -1);
-    return (
-        <TableRow component="div"
-            className={classnames(classes.row, classes.container)}
-            style={style}
-            selected={selected}
-            hover
-        >
-            {columns.map((column, columnIndex) => {
-                const Item = column.component;
-                return (
-                    <TableCell
-                        component="div"
-                        className={classnames(classes.cell)}
-                        variant="body"
-                        key={columnIndex}
-                        style={column.style}
-                        align={column.align}
-                    >
-                        <Item
-                            value={item[column.key]}
-                            item={item}
-                            index={index}
-                            column={column}
-                            columnIndex={columnIndex}
-                            selected={selected}
-                            selectable={selectable}
-                            onSelect={onSelect}
-                        />
-                    </TableCell>
-                );
-            })}
-        </TableRow>
-    );
-}, areEqual);
 
 const styles = theme => ({
     row: {
@@ -96,35 +54,15 @@ const styles = theme => ({
             fontWeight: 800
         }
     },
+    footer: {
+        '& $cell': {
+            flex: 1
+        }
+    },
     body: {}
 });
 
-const Header = ({ classes, columns, width, domRef }) => {
-    return (
-        <div
-            className={classnames(classes.header, classes.row)}
-            ref={domRef}
-            style={{ width: width }}
-        >
-            {columns.map((column, columnIndex) => {
-                return (
-                    <TableCell
-                        component="div"
-                        className={classnames(classes.cell)}
-                        variant="head"
-                        key={columnIndex}
-                        style={getColumnStyle(column)}
-                        align={column.align}
-                    >
-                        {column.label}
-                    </TableCell>
-                );
-            })}
-        </div>
-    );
-};
-
-const getColumnStyle = column => {
+export const getColumnStyle = column => {
     const { flex, width } = column;
     if (!width) {
         return { flex: flex || 1 };
@@ -171,21 +109,29 @@ const Table = ({
     classes,
     columns,
     data,
+    minHeight,
     width,
     height,
     selectable,
     selection,
     selectAll,
     onSelect,
-    onSelectAll
+    onSelectAll,
+    onItemsRendered
 }) => {
-    const [headerHeight, setHeaderHeight] = useState(56);
+    const [offsetHeight, setHeightOffset] = useState(0);
+    const [visibleIndexes, setVisibleIndexes] = useState({ start: 0, stop: 0 });
     const headerRef = useRef(null);
+    const footerRef = useRef(null);
     useLayoutEffect(() => {
-        if (headerRef.current) {
-            setHeaderHeight(0);
+        let offset = 0
+        if (footerRef.current) {
+            offset += footerRef.current.clientHeight;
         }
-        setHeaderHeight(headerRef.current.clientHeight);
+        if (headerRef.current) {
+            offset += headerRef.current.clientHeight;
+        }
+        setHeightOffset(offset);
     });
 
     const itemCount = data.length;
@@ -203,6 +149,20 @@ const Table = ({
         }
         return columns.map(getColumnConfig);
     }, [columns, selectable, selectCount, itemCount, onSelectAll]);
+
+    const handleItemsRendered = useCallback(
+        metrics => {
+            const { visibleStartIndex, visibleStopIndex } = metrics;
+            setVisibleIndexes({
+                start: visibleStartIndex,
+                stop: visibleStopIndex
+            });
+            if (onItemsRendered) {
+                onItemsRendered(metrics);
+            }
+        },
+        [onItemsRendered]
+    );
     return (
         <div className={classes.table}>
             <Header
@@ -214,7 +174,7 @@ const Table = ({
             <div className={classes.body}>
                 <List
                     className={classes.grid}
-                    height={height - headerHeight}
+                    height={height - offsetHeight}
                     itemCount={itemCount}
                     itemSize={() => 30}
                     itemData={{
@@ -227,10 +187,20 @@ const Table = ({
                         onSelect
                     }}
                     width={width}
+                    onItemsRendered={handleItemsRendered}
                 >
                     {Row}
                 </List>
             </div>
+            <Footer
+                classes={classes}
+                domRef={footerRef}
+                selectCount={selectCount}
+                visibleStart={visibleIndexes.start}
+                visibleStop={visibleIndexes.stop}
+                itemCount={itemCount}
+                width={width}
+            />
         </div>
     );
 };
