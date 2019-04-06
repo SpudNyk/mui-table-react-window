@@ -108,7 +108,8 @@ const selectColumn = (selectCount, itemCount, onSelectAll) => {
 const Table = ({
     classes,
     columns,
-    data,
+    items,
+    itemPlural,
     minHeight,
     width,
     height,
@@ -134,7 +135,7 @@ const Table = ({
         setHeightOffset(offset);
     });
 
-    const itemCount = data.length;
+    const itemCount = items.length;
     const selectCount = selectable
         ? selectAll
             ? itemCount
@@ -180,7 +181,7 @@ const Table = ({
                     itemData={{
                         classes,
                         columns: cols,
-                        items: data,
+                        items,
                         selectable,
                         selection,
                         selectAll,
@@ -199,6 +200,7 @@ const Table = ({
                 visibleStart={visibleIndexes.start}
                 visibleStop={visibleIndexes.stop}
                 itemCount={itemCount}
+                itemPlural={itemPlural}
                 width={width}
             />
         </div>

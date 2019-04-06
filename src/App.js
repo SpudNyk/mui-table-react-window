@@ -94,12 +94,13 @@ const App = () => {
                     }}
                 >
                     <Table
-                        data={data}
+                        items={data}
                         columns={columns}
                         selectable
                         selection={selection}
                         onSelect={onSelect}
                         onSelectAll={onSelectAll}
+                        itemPlural="People"
                     />
                 </Paper>
             </Grid>
