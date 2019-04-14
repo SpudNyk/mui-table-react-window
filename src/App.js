@@ -73,6 +73,7 @@ const App = () => {
             style={{
                 padding: 12,
                 minHeight: '100vh',
+                height: '100vh',
                 display: 'flex',
                 flexDirection: 'column'
             }}
@@ -80,8 +81,6 @@ const App = () => {
             <CssBaseline />
             <Paper
                 style={{
-                    height: '100%',
-                    width: '100%',
                     maxWidth: '1000px',
                     flex: 1
                 }}

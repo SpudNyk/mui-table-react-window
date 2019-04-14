@@ -8,8 +8,8 @@ const Footer = ({
     domRef,
     visibleStart,
     visibleStop,
-    selection,
-    items,
+    selectCount,
+    itemCount,
     itemPlural = 'Items',
     align = 'right'
 }) => {
@@ -25,9 +25,9 @@ const Footer = ({
                 variant="footer"
                 align={align}
             >
-                Viewing {visibleStart + 1} to {visibleStop + 1} of {items.length}{' '}
+                Viewing {visibleStart + 1} to {visibleStop + 1} of {itemCount}{' '}
                 {itemPlural}
-                {selection && selection.length > 0 ? ` (${selection} selected)` : ''}
+                {selectCount.length > 0 ? ` (${selectCount} selected)` : ''}
             </TableCell>
         </div>
     );
