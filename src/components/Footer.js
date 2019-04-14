@@ -17,7 +17,7 @@ const Footer = ({
         <div
             className={classnames(classes.footer, classes.row)}
             ref={domRef}
-            style={{ width: width }}
+            style={{ width: width, height: 56 }}
         >
             <TableCell
                 component="div"
@@ -33,4 +33,4 @@ const Footer = ({
     );
 };
 
-export default Footer;
+export default React.memo(Footer);

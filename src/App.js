@@ -11,7 +11,7 @@ const DateCell = React.memo(({ data }) => {
 });
 
 const App = () => {
-    const data = useMemo(() => generateData(1000), []);
+    const data = useMemo(() => generateData(10000), []);
     const [selection, setSelection] = useState([]);
     const onSelect = useCallback(
         (item, selected) => {

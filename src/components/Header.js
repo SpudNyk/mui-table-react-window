@@ -1,7 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
 import TableCell from '@material-ui/core/TableCell';
-import { getColumnStyle } from './Table';
 
 const Header = ({ classes, columns, width, domRef }) => {
     return (
@@ -17,7 +16,7 @@ const Header = ({ classes, columns, width, domRef }) => {
                         className={classnames(classes.cell)}
                         variant="head"
                         key={columnIndex}
-                        style={getColumnStyle(column)}
+                        style={column.style}
                         align={column.align}
                     >
                         {column.label}
