@@ -5,8 +5,8 @@ const useColumns = (
     columns,
     width,
     selectable = false,
-    selection = null,
-    items = null,
+    selectCount = 0,
+    itemCount = 0,
     onSelectAll = null
 ) => {
     return useMemo(
@@ -15,11 +15,11 @@ const useColumns = (
                 columns,
                 width,
                 selectable,
-                selection.length,
-                items.length,
+                selectCount,
+                itemCount,
                 onSelectAll
             ),
-        [columns, selectable, selection.length, items.length, onSelectAll]
+        [columns, selectable, selectCount, itemCount, onSelectAll]
     );
 };
 

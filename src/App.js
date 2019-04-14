@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import Grid from '@material-ui/core/Grid';
 import Table from './components/Table';
 import generateData from './data/dummy';
 import moment from 'moment';
@@ -79,31 +78,24 @@ const App = () => {
             }}
         >
             <CssBaseline />
-            <Grid
-                container
-                direction="column"
-                alignItems="center"
-                style={{ flex: 1 }}
+            <Paper
+                style={{
+                    height: '100%',
+                    width: '100%',
+                    maxWidth: '1000px',
+                    flex: 1
+                }}
             >
-                <Paper
-                    style={{
-                        height: '100%',
-                        width: '100%',
-                        maxWidth: '1000px',
-                        flex: 1
-                    }}
-                >
-                    <Table
-                        items={data}
-                        columns={columns}
-                        selectable
-                        selection={selection}
-                        onSelect={onSelect}
-                        onSelectAll={onSelectAll}
-                        itemPlural="People"
-                    />
-                </Paper>
-            </Grid>
+                <Table
+                    items={data}
+                    columns={columns}
+                    selectable
+                    selection={selection}
+                    onSelect={onSelect}
+                    onSelectAll={onSelectAll}
+                    itemPlural="People"
+                />
+            </Paper>
         </div>
     );
 };

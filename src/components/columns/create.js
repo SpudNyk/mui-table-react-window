@@ -26,12 +26,12 @@ export const createColumns = (
     columns,
     width,
     selectable,
-    selection,
-    items,
+    selectCount,
+    itemCount,
     onSelectAll
 ) => {
     if (selectable) {
-        return [selectColumn(selection.length, items.length, onSelectAll)]
+        return [selectColumn(selectCount, itemCount, onSelectAll)]
             .concat(columns)
             .map(createColumn);
     }

@@ -7,14 +7,14 @@ import { areEqual } from 'react-window';
 const Row = React.memo(({ index, style, data }) => {
     const {
         columns,
-        items,
         classes,
         selectable,
         selectAll,
         selection,
-        onSelect
+        onSelect,
+        getItem
     } = data;
-    const item = items[index];
+    const item = getItem(index);
     const selected =
         selectable && (selectAll || selection.indexOf(item) !== -1);
     return (

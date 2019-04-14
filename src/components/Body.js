@@ -4,14 +4,14 @@ import Row from './Row';
 
 export default React.memo(function Body({
     classes,
-    height,
-    itemCount,
     width,
+    height,
     columns,
-    items,
+    itemCount,
     selectable,
     selection,
     selectAll,
+    getItem,
     onItemsRendered,
     onSelect
 }) {
@@ -25,11 +25,11 @@ export default React.memo(function Body({
                 itemData={{
                     classes,
                     columns,
-                    items,
                     selectable,
                     selection,
                     selectAll,
-                    onSelect
+                    onSelect,
+                    getItem
                 }}
                 width={width}
                 onItemsRendered={onItemsRendered}

@@ -51,9 +51,11 @@ const Table = ({
     classes,
     columns,
     items,
+    itemCount,
     itemPlural,
     width,
     height,
+    listRef,
     selectable,
     selection,
     selectAll,
@@ -65,6 +67,16 @@ const Table = ({
     const [metrics, setMetrics] = useState({});
     const headerRef = useRef(null);
     const footerRef = useRef(null);
+
+    if (itemCount == null) {
+        itemCount = items ? items.length : 0;
+    }
+    const selectCount = selectAll
+        ? itemCount
+        : selection
+        ? selection.length
+        : 0;
+
     useLayoutEffect(() => {
         let offset = 0;
         if (footerRef.current) {
@@ -75,6 +87,7 @@ const Table = ({
         }
         setHeightOffset(offset);
     });
+
     const handleItemsRendered = useCallback(
         metrics => {
             setMetrics(metrics);
@@ -84,14 +97,17 @@ const Table = ({
         },
         [onItemsRendered, setMetrics]
     );
-    const itemCount = items.length;
-    const selectCount = selectable
-        ? selectAll
-            ? itemCount
-            : selection.length
-        : 0;
 
-    const cols = useColumns(columns, width, selectable, selection, items, onSelectAll);
+    const cols = useColumns(
+        columns,
+        width,
+        selectable,
+        selectCount,
+        itemCount,
+        onSelectAll
+    );
+
+    const getItemForIndex = useCallback(index => items[index], [items]);
     return (
         <div className={classes.table}>
             <Header
@@ -103,7 +119,6 @@ const Table = ({
             <Body
                 classes={classes}
                 height={height - offsetHeight}
-                itemCount={itemCount}
                 width={width}
                 columns={cols}
                 selectable={selectable}
@@ -111,7 +126,9 @@ const Table = ({
                 selectAll={selectAll}
                 onSelect={onSelect}
                 onItemsRendered={handleItemsRendered}
-                items={items}
+                listRef={listRef}
+                itemCount={itemCount}
+                getItem={getItemForIndex}
             />
             <Footer
                 classes={classes}
