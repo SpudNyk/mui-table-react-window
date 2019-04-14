@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = {
     content: {
         flex: 1,
+        overflow: 'hidden',
         textOverflow: 'ellipsis'
     }
 };
