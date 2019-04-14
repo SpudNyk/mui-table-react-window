@@ -73,7 +73,8 @@ const App = () => {
             style={{
                 padding: 12,
                 minHeight: '100vh',
-                height: '100vh',
+                // workaround IE11
+                height: '0px',
                 display: 'flex',
                 flexDirection: 'column'
             }}
