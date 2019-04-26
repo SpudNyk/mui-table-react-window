@@ -16,11 +16,12 @@ const DateCell = React.memo(({ data }) => {
 const theme = createMuiTheme({});
 
 const App = () => {
-    const data = useMemo(() => generateData(10000), []);
+    const [dataCount, setDataCount] = useState(1000);
+    const data = useMemo(() => generateData(dataCount), [dataCount]);
     const [selection, setSelection] = useState([]);
     const [message, setMessage] = useState('');
     const [messageAlign, setMessageAlign] = useState('inherit');
-
+    const onDataCount = useCallback(e => setDataCount(e.target.value), []);
     const onMessage = useCallback(e => setMessage(e.target.value), []);
     const onMessageAlign = useCallback(
         e => setMessageAlign(e.target.value),
@@ -103,7 +104,16 @@ const App = () => {
                     }}
                 >
                     <Grid alignItems="stretch" container spacing={8}>
-                        <Grid item xs={8}>
+                        <Grid item xs={3}>
+                            <TextField
+                                label="Items"
+                                type="number"
+                                value={dataCount}
+                                onChange={onDataCount}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
                             <TextField
                                 label="Message"
                                 value={message}
@@ -111,7 +121,7 @@ const App = () => {
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <TextField
                                 label="Align"
                                 value={messageAlign}
