@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 
 const Select = ({ item, selected, onSelect }) => (
@@ -7,6 +8,11 @@ const Select = ({ item, selected, onSelect }) => (
         onChange={event => onSelect && onSelect(item, event.target.checked)}
     />
 );
+Select.propTypes = {
+    item: PropTypes.any,
+    selected: PropTypes.bool,
+    onSelect: PropTypes.func
+};
 
 export const selectColumn = (selectCount, itemCount, onSelectAll) => {
     return {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import TableCell from '@material-ui/core/TableCell';
 
@@ -26,5 +27,10 @@ const Header = ({ classes, columns, width, domRef }) => {
         </div>
     );
 };
-
+Header.propTypes = {
+    classes: PropTypes.object,
+    align: PropTypes.oneOf(['left', 'center', 'right', 'justify', 'inherit']),
+    width: PropTypes.number,
+    domRef: PropTypes.any
+};
 export default Header;

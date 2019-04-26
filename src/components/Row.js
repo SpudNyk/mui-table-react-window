@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { areEqual } from 'react-window';
 
-const Row = React.memo(({ index, style, data }) => {
+const Row = ({ index, style, data }) => {
     const {
         columns,
         classes,
@@ -51,5 +52,10 @@ const Row = React.memo(({ index, style, data }) => {
             })}
         </TableRow>
     );
-}, areEqual);
-export default Row;
+};
+Row.propTypes = {
+    index: PropTypes.number,
+    style: PropTypes.object,
+    data: PropTypes.object
+};
+export default React.memo(Row, areEqual);

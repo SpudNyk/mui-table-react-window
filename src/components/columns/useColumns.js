@@ -19,7 +19,7 @@ const useColumns = (
                 itemCount,
                 onSelectAll
             ),
-        [columns, selectable, selectCount, itemCount, onSelectAll]
+        [columns, selectable, selectCount, itemCount, onSelectAll, width]
     );
 };
 

@@ -1,15 +1,19 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/styles';
 
-const styles = {
+const useStyles = makeStyles({
     content: {
         flex: 1,
         overflow: 'hidden',
         textOverflow: 'ellipsis'
     }
-};
-const Content = ({ classes, value }) => {
+});
+const Content = ({ value }) => {
+    const classes = useStyles();
     return <div className={classes.content}>{String(value)}</div>;
 };
-
-export default withStyles(styles)(Content);
+Content.propTypes = {
+    value: PropTypes.any
+};
+export default React.memo(Content);

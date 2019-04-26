@@ -1,17 +1,31 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import Table from './components/Table';
-import generateData from './data/dummy';
-import moment from 'moment';
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import Table from './components/AutoSize';
+import generateData from './data/dummy';
+import moment from 'moment';
 
 const DateCell = React.memo(({ data }) => {
     return moment(data).format('YYYY-MM-DD');
+});
+const theme = createMuiTheme({
+
 });
 
 const App = () => {
     const data = useMemo(() => generateData(10000), []);
     const [selection, setSelection] = useState([]);
+    const [message, setMessage] = useState('');
+    const [messageAlign, setMessageAlign] = useState('inherit');
+
+    const onMessage = useCallback(e => setMessage(e.target.value), []);
+    const onMessageAlign = useCallback(e => setMessageAlign(e.target.value), []);
     const onSelect = useCallback(
         (item, selected) => {
             const index = selection.indexOf(item);
@@ -79,23 +93,61 @@ const App = () => {
                 flexDirection: 'column'
             }}
         >
-            <CssBaseline />
-            <Paper
-                style={{
-                    maxWidth: '1000px',
-                    flex: 1
-                }}
-            >
-                <Table
-                    items={data}
-                    columns={columns}
-                    selectable
-                    selection={selection}
-                    onSelect={onSelect}
-                    onSelectAll={onSelectAll}
-                    itemPlural="People"
-                />
-            </Paper>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Paper
+                    style={{
+                        marginTop: 16,
+                        maxWidth: '1000px',
+                        padding: 16
+                    }}
+                >
+                    <Grid alignItems="stretch" container spacing={8}>
+                        <Grid item xs={8}>
+                            <TextField
+                                label="Message"
+                                value={message}
+                                onChange={onMessage}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField
+                                label="Align"
+                                value={messageAlign}
+                                onChange={onMessageAlign}
+                                fullWidth
+                                select
+                            >
+                                <MenuItem value="inherit">Inherit</MenuItem>
+                                <MenuItem value="left">Left</MenuItem>
+                                <MenuItem value="center">Center</MenuItem>
+                                <MenuItem value="right">Right</MenuItem>
+                                <MenuItem value="justify">Justify</MenuItem>
+                            </TextField>
+                        </Grid>
+                    </Grid>
+                </Paper>
+                <Paper
+                    style={{
+                        marginTop: 16,
+                        maxWidth: '1000px',
+                        flex: 1
+                    }}
+                >
+                    <Table
+                        items={data}
+                        columns={columns}
+                        selectable
+                        selection={selection}
+                        onSelect={onSelect}
+                        onSelectAll={onSelectAll}
+                        message={message}
+                        messageAlign={messageAlign}
+                        itemPlural="People"
+                    />
+                </Paper>
+            </ThemeProvider>
         </div>
     );
 };

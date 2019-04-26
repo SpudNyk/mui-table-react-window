@@ -1,7 +1,7 @@
 import React, { useState, useRef, useLayoutEffect, useCallback } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/styles';
 import {
     darken,
     fade,
@@ -11,8 +11,16 @@ import Body from './Body';
 import Header from './Header';
 import Footer from './Footer';
 import useColumns from './columns/useColumns';
+import columnPropType from './columns/propType';
+import Message from './Message';
 
-const styles = theme => ({
+const defaultRowHeight = 56;
+const themeRowHeight = theme =>
+    theme && theme.windowTable && theme.windowTable.rowHeight
+        ? theme.windowTable.rowHeight
+        : defaultRowHeight;
+
+const useStyles = makeStyles(theme => ({
     row: {
         display: 'flex',
         boxSizing: 'border-box',
@@ -29,12 +37,24 @@ const styles = theme => ({
     table: {
         fontFamily: theme.typography.fontFamily
     },
+    message: {
+        '&$row': {
+            minHeight: themeRowHeight(theme)
+        },
+        '& $cell': {
+            display: 'inline-block',
+            flex: 1
+        }
+    },
     header: {
         '& $cell': {
             fontWeight: 800
         }
     },
     footer: {
+        '&$row': {
+            minHeight: themeRowHeight(theme)
+        },
         '& $cell': {
             flex: 1,
             borderTop: `1px solid ${
@@ -45,7 +65,17 @@ const styles = theme => ({
         }
     },
     body: {}
-});
+}));
+
+const useItemHeightCallback = (callback, minHeight) => {
+    const cb = callback
+        ? index => Math.max(callback(index), minHeight)
+        : () => minHeight;
+    return useCallback(cb, [callback, minHeight]);
+};
+
+const useItemCallback = (callback, items) =>
+    useCallback(callback ? callback : index => items[index], [callback, items]);
 
 const Table = ({
     classes,
@@ -53,9 +83,13 @@ const Table = ({
     items,
     itemCount,
     itemPlural,
+    getItem,
+    getItemHeight,
     width,
     height,
     listRef,
+    message,
+    messageAlign,
     selectable,
     selection,
     selectAll,
@@ -63,11 +97,14 @@ const Table = ({
     onSelectAll,
     onItemsRendered
 }) => {
+    const theme = useTheme();
+    const rowHeight = themeRowHeight(theme);
+    classes = useStyles({ classes });
     const [offsetHeight, setHeightOffset] = useState(0);
     const [metrics, setMetrics] = useState({});
     const headerRef = useRef(null);
     const footerRef = useRef(null);
-
+    const messageRef = useRef(null);
     if (itemCount == null) {
         itemCount = items ? items.length : 0;
     }
@@ -77,10 +114,16 @@ const Table = ({
         ? selection.length
         : 0;
 
+    // calculate on every render in case heights have changed
+    // setHeightOffset will protect against rerenders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useLayoutEffect(() => {
         let offset = 0;
         if (footerRef.current) {
             offset += footerRef.current.clientHeight;
+        }
+        if (message && messageRef.current) {
+            offset += messageRef.current.clientHeight;
         }
         if (headerRef.current) {
             offset += headerRef.current.clientHeight;
@@ -107,7 +150,12 @@ const Table = ({
         onSelectAll
     );
 
-    const getItemForIndex = useCallback(index => items[index], [items]);
+    const getItemHeightForIndex = useItemHeightCallback(
+        getItemHeight,
+        rowHeight
+    );
+
+    const getItemForIndex = useItemCallback(getItem, items);
     return (
         <div className={classes.table}>
             <Header
@@ -116,20 +164,32 @@ const Table = ({
                 width={width}
                 columns={cols}
             />
-            <Body
-                classes={classes}
-                height={height - offsetHeight}
-                width={width}
-                columns={cols}
-                selectable={selectable}
-                selection={selection}
-                selectAll={selectAll}
-                onSelect={onSelect}
-                onItemsRendered={handleItemsRendered}
-                listRef={listRef}
-                itemCount={itemCount}
-                getItem={getItemForIndex}
-            />
+            {message ? (
+                <Message
+                    classes={classes}
+                    width={width}
+                    domRef={messageRef}
+                    align={messageAlign}
+                >
+                    {message}
+                </Message>
+            ) : (
+                <Body
+                    classes={classes}
+                    height={height - offsetHeight}
+                    width={width}
+                    columns={cols}
+                    selectable={selectable}
+                    selection={selection}
+                    selectAll={selectAll}
+                    onSelect={onSelect}
+                    onItemsRendered={handleItemsRendered}
+                    listRef={listRef}
+                    itemCount={itemCount}
+                    getItem={getItemForIndex}
+                    getItemHeight={getItemHeightForIndex}
+                />
+            )}
             <Footer
                 classes={classes}
                 domRef={footerRef}
@@ -143,13 +203,25 @@ const Table = ({
         </div>
     );
 };
+Table.propTypes = {
+    classes: PropTypes.object,
+    columns: PropTypes.arrayOf(columnPropType),
+    message: PropTypes.node,
+    messageAlign: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number,
+    items: PropTypes.array,
+    itemCount: PropTypes.number,
+    itemPlural: PropTypes.string,
+    getItem: PropTypes.func,
+    getItemHeight: PropTypes.func,
+    listRef: PropTypes.any,
+    selectable: PropTypes.bool,
+    selection: PropTypes.array,
+    selectAll: PropTypes.bool,
+    onSelect: PropTypes.func,
+    onSelectAll: PropTypes.func,
+    onItemsRendered: PropTypes.func
+};
 
-const AutoSizedTable = props => (
-    <AutoSizer>
-        {({ width, height }) => {
-            return <Table width={width} height={height} {...props} />;
-        }}
-    </AutoSizer>
-);
-
-export default withStyles(styles)(AutoSizedTable);
+export default Table;

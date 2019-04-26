@@ -17,11 +17,11 @@ const Footer = ({
         <div
             className={classnames(classes.footer, classes.row)}
             ref={domRef}
-            style={{ width: width, height: 56 }}
+            style={{ width: width }}
         >
             <TableCell
                 component="div"
-                className={classnames(classes.cell)}
+                className={classes.cell}
                 variant="footer"
                 align={align}
             >
