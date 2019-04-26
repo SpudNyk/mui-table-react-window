@@ -42,10 +42,13 @@ const useStyles = makeStyles(theme => ({
             minHeight: themeRowHeight(theme)
         },
         '& $cell': {
-            display: 'inline-block',
-            flex: 1
+            flex: 1,
+            '&$center': {
+                justifyContent: 'center'
+            }
         }
     },
+    center: {},
     header: {
         '& $cell': {
             fontWeight: 800

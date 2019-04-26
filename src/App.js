@@ -4,7 +4,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import Table from './components/AutoSize';
@@ -14,9 +13,7 @@ import moment from 'moment';
 const DateCell = React.memo(({ data }) => {
     return moment(data).format('YYYY-MM-DD');
 });
-const theme = createMuiTheme({
-
-});
+const theme = createMuiTheme({});
 
 const App = () => {
     const data = useMemo(() => generateData(10000), []);
@@ -25,7 +22,10 @@ const App = () => {
     const [messageAlign, setMessageAlign] = useState('inherit');
 
     const onMessage = useCallback(e => setMessage(e.target.value), []);
-    const onMessageAlign = useCallback(e => setMessageAlign(e.target.value), []);
+    const onMessageAlign = useCallback(
+        e => setMessageAlign(e.target.value),
+        []
+    );
     const onSelect = useCallback(
         (item, selected) => {
             const index = selection.indexOf(item);

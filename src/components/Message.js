@@ -11,7 +11,9 @@ const Message = ({ classes, align, width, domRef, children }) => (
     >
         <TableCell
             component="div"
-            className={classes.cell}
+            className={classnames(classes.cell, {
+                [classes.center]: align === 'center'
+            })}
             variant="body"
             align={align}
         >
