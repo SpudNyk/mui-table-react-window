@@ -10,6 +10,7 @@ function Body({
     listRef,
     columns,
     itemCount,
+    overscanCount,
     selectable,
     selection,
     selectAll,
@@ -36,6 +37,7 @@ function Body({
                 }}
                 width={width}
                 onItemsRendered={onItemsRendered}
+                overscanCount={overscanCount}
                 ref={listRef}
             >
                 {Row}
@@ -50,11 +52,15 @@ Body.propTypes = {
     listRef: PropTypes.any,
     columns: PropTypes.array,
     itemCount: PropTypes.number,
+    overscanCount: PropTypes.number,
     selectable: PropTypes.bool,
     selection: PropTypes.array,
     selectAll: PropTypes.bool,
     getItem: PropTypes.func,
     onItemsRendered: PropTypes.func,
     onSelect: PropTypes.func
+};
+Body.defaultProps = {
+    overscanCount: 1
 };
 export default React.memo(Body);

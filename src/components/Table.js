@@ -92,6 +92,7 @@ const Table = ({
     itemPlural,
     getItem,
     getItemHeight,
+    overscanCount,
     width,
     height,
     listRef,
@@ -193,6 +194,7 @@ const Table = ({
                     onItemsRendered={handleItemsRendered}
                     listRef={listRef}
                     itemCount={itemCount}
+                    overscanCount={overscanCount}
                     getItem={getItemForIndex}
                     getItemHeight={getItemHeightForIndex}
                 />
@@ -222,6 +224,7 @@ Table.propTypes = {
     itemPlural: PropTypes.string,
     getItem: PropTypes.func,
     getItemHeight: PropTypes.func,
+    overscanCount: PropTypes.number,
     listRef: PropTypes.any,
     selectable: PropTypes.bool,
     selection: PropTypes.array,

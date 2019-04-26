@@ -17,10 +17,12 @@ const theme = createMuiTheme({});
 
 const App = () => {
     const [dataCount, setDataCount] = useState(1000);
+    const [overscan, setOverscan] = useState(1);
     const data = useMemo(() => generateData(dataCount), [dataCount]);
     const [selection, setSelection] = useState([]);
     const [message, setMessage] = useState('');
     const [messageAlign, setMessageAlign] = useState('inherit');
+    const onOverscan = useCallback(e => setOverscan(e.target.value), []);
     const onDataCount = useCallback(e => setDataCount(e.target.value), []);
     const onMessage = useCallback(e => setMessage(e.target.value), []);
     const onMessageAlign = useCallback(
@@ -104,12 +106,21 @@ const App = () => {
                     }}
                 >
                     <Grid alignItems="stretch" container spacing={8}>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             <TextField
                                 label="Items"
                                 type="number"
                                 value={dataCount}
                                 onChange={onDataCount}
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <TextField
+                                label="Overscan"
+                                type="number"
+                                value={overscan}
+                                onChange={onOverscan}
                                 fullWidth
                             />
                         </Grid>
@@ -121,7 +132,7 @@ const App = () => {
                                 fullWidth
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             <TextField
                                 label="Align"
                                 value={messageAlign}
@@ -147,6 +158,7 @@ const App = () => {
                 >
                     <Table
                         items={data}
+                        overscanCount={overscan}
                         columns={columns}
                         selectable
                         selection={selection}
