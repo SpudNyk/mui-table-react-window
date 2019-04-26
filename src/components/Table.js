@@ -39,7 +39,9 @@ const useStyles = makeStyles(theme => ({
     },
     message: {
         '&$row': {
-            minHeight: themeRowHeight(theme)
+            minHeight: themeRowHeight(theme),
+            // IE11 needs an explicit height to respect min height
+            height: 0
         },
         '& $cell': {
             flex: 1,
@@ -56,7 +58,9 @@ const useStyles = makeStyles(theme => ({
     },
     footer: {
         '&$row': {
-            minHeight: themeRowHeight(theme)
+            minHeight: themeRowHeight(theme),
+            // IE11 needs an explicit height to respect min height
+            height: 0
         },
         '& $cell': {
             flex: 1,
@@ -227,4 +231,4 @@ Table.propTypes = {
     onItemsRendered: PropTypes.func
 };
 
-export default Table;
+export default React.memo(Table);

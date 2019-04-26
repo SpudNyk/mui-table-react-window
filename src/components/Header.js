@@ -33,4 +33,4 @@ Header.propTypes = {
     width: PropTypes.number,
     domRef: PropTypes.any
 };
-export default Header;
+export default React.memo(Header);
