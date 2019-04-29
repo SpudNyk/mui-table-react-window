@@ -2,15 +2,23 @@ import Label from './Label';
 import Text from './type/Text';
 
 const createColumnStyle = column => {
-    const { flex, width, minWidth = 0, maxWidth = Infinity } = column;
-    if (!width) {
-        return { flex: flex || 1 };
+    const { flex, width, minWidth = null, maxWidth = null, baseWidth = 0 } = column;
+
+    const style = {};
+    if (width != null) {
+        style.flexBasis = width;
     } else {
-        return {
-            minWidth: Math.max(width, minWidth),
-            maxWidth: Math.min(width, maxWidth)
-        };
+        style.flexGrow = flex || 1;
+        style.flexBasis = baseWidth;
+        style.flexShrink = 1;
     }
+    if (maxWidth != null) {
+        style.maxWidth = maxWidth;
+    }
+    if (minWidth != null) {
+        style.minWidth = minWidth;
+    }
+    return style;
 };
 
 const createColumn = def => {
