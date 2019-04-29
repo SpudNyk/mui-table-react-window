@@ -6,28 +6,29 @@ import TableCell from '@material-ui/core/TableCell';
 import { areEqual } from 'react-window';
 
 const Row = ({ index, style, data }) => {
-    const {
-        columns,
-        classes,
-        selectable,
-        selectAll,
-        selection,
-        onSelect,
-        getItem
-    } = data;
+    const { columns, classes, getItem, isItemSelected } = data;
     const item = getItem(index);
-    const selected =
-        selectable && (selectAll || selection.indexOf(item) !== -1);
+    const itemSelected = isItemSelected(item, index);
     return (
         <TableRow
             component="div"
             className={classnames(classes.row, classes.container)}
             style={style}
-            selected={selected}
+            selected={itemSelected}
             hover
         >
             {columns.map((column, columnIndex) => {
-                const Item = column.component;
+                const Content = column.component;
+                const content = (
+                    <Content
+                        value={item[column.key]}
+                        item={item}
+                        index={index}
+                        column={column}
+                        columnIndex={columnIndex}
+                        itemSelected={itemSelected}
+                    />
+                );
                 return (
                     <TableCell
                         component="div"
@@ -37,16 +38,11 @@ const Row = ({ index, style, data }) => {
                         style={column.style}
                         align={column.align}
                     >
-                        <Item
-                            value={item[column.key]}
-                            item={item}
-                            index={index}
-                            column={column}
-                            columnIndex={columnIndex}
-                            selected={selected}
-                            selectable={selectable}
-                            onSelect={onSelect}
-                        />
+                        {column.rawContent === true ? (
+                            content
+                        ) : (
+                            <div className={classes.content}>{content}</div>
+                        )}
                     </TableCell>
                 );
             })}

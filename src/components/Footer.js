@@ -27,7 +27,7 @@ const Footer = ({
             >
                 Viewing {visibleStart + 1} to {visibleStop + 1} of {itemCount}{' '}
                 {itemPlural}
-                {selectCount.length > 0 ? ` (${selectCount} selected)` : ''}
+                {selectCount > 0 ? ` (${selectCount} selected)` : ''}
             </TableCell>
         </div>
     );

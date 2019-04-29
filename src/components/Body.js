@@ -11,13 +11,10 @@ function Body({
     columns,
     itemCount,
     overscanCount,
-    selectable,
-    selection,
-    selectAll,
     getItem,
     getItemHeight,
+    isItemSelected,
     onItemsRendered,
-    onSelect
 }) {
     return (
         <div className={classes.body}>
@@ -29,10 +26,7 @@ function Body({
                 itemData={{
                     classes,
                     columns,
-                    selectable,
-                    selection,
-                    selectAll,
-                    onSelect,
+                    isItemSelected,
                     getItem
                 }}
                 width={width}

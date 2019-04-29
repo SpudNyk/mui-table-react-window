@@ -10,8 +10,7 @@ import {
 import Body from './Body';
 import Header from './Header';
 import Footer from './Footer';
-import useColumns from './columns/useColumns';
-import columnPropType from './columns/propType';
+import useColumns from './column/useColumns';
 import Message from './Message';
 
 const defaultRowHeight = 56;
@@ -31,9 +30,13 @@ const useStyles = makeStyles(theme => ({
         boxSizing: 'border-box',
         alignItems: 'center',
         overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap'
+        '& $content': {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+        }
     },
+    content: {},
     table: {
         fontFamily: theme.typography.fontFamily
     },
@@ -91,6 +94,8 @@ const Table = ({
     itemCount,
     itemPlural,
     getItem,
+    isItemSelected,
+    selectCount,
     getItemHeight,
     overscanCount,
     width,
@@ -98,11 +103,6 @@ const Table = ({
     listRef,
     message,
     messageAlign,
-    selectable,
-    selection,
-    selectAll,
-    onSelect,
-    onSelectAll,
     onItemsRendered
 }) => {
     const theme = useTheme();
@@ -116,14 +116,9 @@ const Table = ({
     if (itemCount == null) {
         itemCount = items ? items.length : 0;
     }
-    const selectCount = selectAll
-        ? itemCount
-        : selection
-        ? selection.length
-        : 0;
 
     // calculate on every render in case heights have changed
-    // setHeightOffset will protect against rerenders.
+    // setHeightOffset will protect against re-renders.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useLayoutEffect(() => {
         let offset = 0;
@@ -149,14 +144,7 @@ const Table = ({
         [onItemsRendered, setMetrics]
     );
 
-    const cols = useColumns(
-        columns,
-        width,
-        selectable,
-        selectCount,
-        itemCount,
-        onSelectAll
-    );
+    const cols = useColumns(columns, width);
 
     const getItemHeightForIndex = useItemHeightCallback(
         getItemHeight,
@@ -187,16 +175,13 @@ const Table = ({
                     height={height - offsetHeight}
                     width={width}
                     columns={cols}
-                    selectable={selectable}
-                    selection={selection}
-                    selectAll={selectAll}
-                    onSelect={onSelect}
                     onItemsRendered={handleItemsRendered}
                     listRef={listRef}
                     itemCount={itemCount}
                     overscanCount={overscanCount}
                     getItem={getItemForIndex}
                     getItemHeight={getItemHeightForIndex}
+                    isItemSelected={isItemSelected}
                 />
             )}
             <Footer
@@ -214,7 +199,7 @@ const Table = ({
 };
 Table.propTypes = {
     classes: PropTypes.object,
-    columns: PropTypes.arrayOf(columnPropType),
+    columns: PropTypes.arrayOf(PropTypes.object),
     message: PropTypes.node,
     messageAlign: PropTypes.string,
     width: PropTypes.number,
@@ -224,13 +209,10 @@ Table.propTypes = {
     itemPlural: PropTypes.string,
     getItem: PropTypes.func,
     getItemHeight: PropTypes.func,
+    isItemSelected: PropTypes.func,
+    selectCount: PropTypes.number,
     overscanCount: PropTypes.number,
     listRef: PropTypes.any,
-    selectable: PropTypes.bool,
-    selection: PropTypes.array,
-    selectAll: PropTypes.bool,
-    onSelect: PropTypes.func,
-    onSelectAll: PropTypes.func,
     onItemsRendered: PropTypes.func
 };
 

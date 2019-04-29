@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
@@ -7,11 +7,12 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import Table from './components/AutoSize';
+import useSelection from './components/useSelection';
 import generateData from './data/dummy';
 import moment from 'moment';
 
-const DateCell = React.memo(({ data }) => {
-    return moment(data).format('YYYY-MM-DD');
+const DateColumn = React.memo(({ value }) => {
+    return moment(value).format('YYYY-MM-DD');
 });
 const theme = createMuiTheme({});
 
@@ -19,7 +20,6 @@ const App = () => {
     const [dataCount, setDataCount] = useState(1000);
     const [overscan, setOverscan] = useState(1);
     const data = useMemo(() => generateData(dataCount), [dataCount]);
-    const [selection, setSelection] = useState([]);
     const [message, setMessage] = useState('');
     const [messageAlign, setMessageAlign] = useState('inherit');
     const onOverscan = useCallback(e => setOverscan(e.target.value), []);
@@ -29,33 +29,14 @@ const App = () => {
         e => setMessageAlign(e.target.value),
         []
     );
-    const onSelect = useCallback(
-        (item, selected) => {
-            const index = selection.indexOf(item);
-            if (selected && index === -1) {
-                setSelection([].concat(selection, item));
-            } else if (index !== -1) {
-                setSelection(
-                    [].concat(
-                        selection.slice(0, index),
-                        selection.slice(index + 1)
-                    )
-                );
-            }
-        },
-        [selection]
+
+    const [selection, selectColumn, resetSelection] = useSelection(
+        data.length
     );
-    const onSelectAll = useCallback(
-        selected => {
-            if (!selected) {
-                setSelection([]);
-            } else {
-                setSelection([].concat(data));
-            }
-        },
-        [data]
-    );
+    useEffect(() => resetSelection(), [data, resetSelection]);
+
     const columns = [
+        selectColumn,
         {
             key: 'firstName',
             label: 'First Name',
@@ -68,14 +49,14 @@ const App = () => {
         {
             key: 'created',
             label: 'Created',
-            component: DateCell,
+            component: DateColumn,
             align: 'right',
             width: 150
         },
         {
             key: 'modified',
             label: 'Modified',
-            component: DateCell,
+            component: DateColumn,
             align: 'right',
             width: 150
         },
@@ -160,12 +141,10 @@ const App = () => {
                         items={data}
                         overscanCount={overscan}
                         columns={columns}
-                        selectable
-                        selection={selection}
-                        onSelect={onSelect}
-                        onSelectAll={onSelectAll}
                         message={message}
                         messageAlign={messageAlign}
+                        isItemSelected={selectColumn.isItemSelected}
+                        selectCount={selection.count}
                         itemPlural="People"
                     />
                 </Paper>

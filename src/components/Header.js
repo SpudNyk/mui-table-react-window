@@ -11,6 +11,7 @@ const Header = ({ classes, columns, width, domRef }) => {
             style={{ width: width }}
         >
             {columns.map((column, columnIndex) => {
+                const Label = column.labelComponent;
                 return (
                     <TableCell
                         component="div"
@@ -20,7 +21,7 @@ const Header = ({ classes, columns, width, domRef }) => {
                         style={column.style}
                         align={column.align}
                     >
-                        {column.label}
+                        <Label column={column} />
                     </TableCell>
                 );
             })}
