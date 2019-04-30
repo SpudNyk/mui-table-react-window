@@ -86,7 +86,7 @@ const App = () => {
                 <Paper
                     style={{
                         marginTop: 16,
-                        maxWidth: '1000px',
+                        maxWidth: '1200px',
                         padding: 16
                     }}
                 >
@@ -137,8 +137,7 @@ const App = () => {
                 <Paper
                     style={{
                         marginTop: 16,
-                        maxWidth: '1000px',
-                        overflow: 'scroll',
+                        maxWidth: '1200px',
                         flex: 1
                     }}
                 >
