@@ -16,11 +16,11 @@ const createColumnStyle = column => {
     const { grow, shrink, width, minWidth = null, maxWidth = null } = column;
 
     const style = {
-        // grow by default unless a width is specified
-        flexGrow: flexValue(grow, width != null ? 0 : 1),
-        // don't shrink by default
-        flexShrink: flexValue(shrink),
-        // flex basis is 0 by default 
+        // grow by default unless a width is set, if a maxWidth is supplied then grow is set
+        flexGrow: flexValue(grow, width == null || maxWidth != null ? 1 : 0),
+        // don't shrink by default unless a minimum width is supplied
+        flexShrink: flexValue(shrink, minWidth != null ? 1 : 0),
+        // flex basis is 0 by default
         // (we don't want the css default of 'auto' or content will force cells to grow)
         flexBasis: flexValue(width)
     };
@@ -28,9 +28,11 @@ const createColumnStyle = column => {
     if (maxWidth != null) {
         style.maxWidth = maxWidth;
     }
+
     if (minWidth != null) {
         style.minWidth = minWidth;
     }
+    
     return style;
 };
 

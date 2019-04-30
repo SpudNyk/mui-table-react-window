@@ -6,7 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import Table from './components/AutoSize';
+import Table from './components/Table';
+import AutoSize from './components/AutoSize';
 import useSelection from './components/useSelection';
 import generateData from './data/dummy';
 import moment from 'moment';
@@ -30,9 +31,7 @@ const App = () => {
         []
     );
 
-    const [selection, selectColumn, resetSelection] = useSelection(
-        data.length
-    );
+    const [selection, selectColumn, resetSelection] = useSelection(data.length);
     useEffect(() => resetSelection(), [data, resetSelection]);
 
     const columns = [
@@ -40,11 +39,14 @@ const App = () => {
         {
             key: 'firstName',
             label: 'First Name',
-            width: 200
+            width: 200,
+            shrink: true
         },
         {
             key: 'lastName',
-            label: 'Last Name'
+            label: 'Last Name',
+            width: 200,
+            shrink: true
         },
         {
             key: 'created',
@@ -63,7 +65,9 @@ const App = () => {
         {
             key: 'title',
             label: 'Title',
-            flex: 1
+            width: 300,
+            shrink: true,
+            grow: 1
         }
     ];
     return (
@@ -134,10 +138,12 @@ const App = () => {
                     style={{
                         marginTop: 16,
                         maxWidth: '1000px',
+                        overflow: 'scroll',
                         flex: 1
                     }}
                 >
-                    <Table
+                    <AutoSize
+                        component={Table}
                         items={data}
                         overscanCount={overscan}
                         columns={columns}
