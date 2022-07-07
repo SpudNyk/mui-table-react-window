@@ -9,7 +9,7 @@
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
     "faker": "^4.1.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
